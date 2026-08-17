@@ -21,7 +21,9 @@
   "scripts": {
     "test": "node --test",
     "example": "node bin/md2pdf.js examples/sample.md",
-    "example:html": "node bin/md2pdf.js examples/sample.md --format html"
+    "example:html": "node bin/md2pdf.js examples/sample.md --format html",
+    "web": "node web/server.js",
+    "web:dev": "node --watch web/server.js"
   },
   "keywords": [
     "markdown",
@@ -34,6 +36,7 @@
   "license": "MIT",
   "dependencies": {
     "commander": "^13.1.0",
+    "express": "^4.21.0",
     "highlight.js": "^11.11.1",
     "markdown-it": "^14.1.0",
     "markdown-it-anchor": "^9.2.0",
