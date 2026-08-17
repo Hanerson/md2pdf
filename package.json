@@ -1,0 +1,47 @@
+{
+  "name": "md2pdf",
+  "version": "0.1.0",
+  "description": "干净的 Markdown → PDF 命令行工具:CJK 中文排版优化,基于 Chromium 高质量打印",
+  "type": "module",
+  "bin": {
+    "md2pdf": "./bin/md2pdf.js"
+  },
+  "exports": {
+    ".": "./src/index.js"
+  },
+  "files": [
+    "bin",
+    "src",
+    "README.md",
+    "LICENSE"
+  ],
+  "engines": {
+    "node": ">=20"
+  },
+  "scripts": {
+    "test": "node --test",
+    "example": "node bin/md2pdf.js examples/sample.md -o examples/sample.pdf --toc --cover",
+    "example:html": "node bin/md2pdf.js examples/sample.md -o examples/sample.html --format html"
+  },
+  "keywords": [
+    "markdown",
+    "pdf",
+    "cli",
+    "cjk",
+    "chinese",
+    "typography"
+  ],
+  "license": "MIT",
+  "dependencies": {
+    "commander": "^13.1.0",
+    "highlight.js": "^11.11.1",
+    "markdown-it": "^14.1.0",
+    "markdown-it-anchor": "^9.2.0",
+    "markdown-it-footnote": "^4.0.0",
+    "markdown-it-task-lists": "^2.1.1",
+    "playwright": "^1.51.1"
+  },
+  "devDependencies": {
+    "pdfjs-dist": "^6.2.108"
+  }
+}
