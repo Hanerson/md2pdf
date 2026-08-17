@@ -1,6 +1,6 @@
 /**
  * HTML 模板与主题加载
- * 主题 CSS 决定 PDF 的"长相"——内置 default 主题针对中文排版优化
+ * 模板只做一件事:把渲染好的正文包进完整 HTML——不加封面、不加目录、不加任何附加页
  */
 import fs from 'node:fs';
 import path from 'node:path';
@@ -21,42 +21,15 @@ export function loadThemeCss(theme) {
   throw new Error(`主题不存在: ${name}(内置主题: default;或传入自定义 .css 路径)`);
 }
 
-/** 目录页 HTML(可点击跳转) */
-export function buildTocHtml(headings) {
-  if (!headings.length) return '';
-  const items = headings.map((h) => {
-    const cls = h.level === 1 ? 'toc-level-1' : h.level === 2 ? 'toc-level-2' : 'toc-level-3';
-    return `<li class="toc-item ${cls}"><a href="#${encodeURIComponent(h.id)}">${escapeHtml(h.text)}</a></li>`;
-  }).join('\n');
-  return `<nav class="toc-page" aria-label="目录"><h2 class="toc-title">目录</h2><ul class="toc-list">${items}</ul></nav>`;
-}
-
-/** 封面页 HTML */
-export function buildCoverHtml({ title, author, date }) {
-  const meta = [];
-  if (author) meta.push(escapeHtml(author));
-  if (date) meta.push(escapeHtml(date));
-  const metaHtml = meta.length
-    ? `<div class="cover-meta">${meta.join(' · ')}</div>`
-    : '';
-  return `<div class="cover-page"><h1 class="cover-title">${escapeHtml(title)}</h1>${metaHtml}</div>`;
-}
-
 /** 组装完整 HTML 文档 */
 export function buildHtml({
   title,
   lang = 'zh-CN',
   bodyHtml,
-  tocHtml = '',
-  coverHtml = '',
   themeCss,
-  bodyClass = '',
-  overrides = {},
+  font,
 }) {
-  const vars = [];
-  if (overrides.font) vars.push(`--md2pdf-font: ${overrides.font};`);
-  if (overrides.lineHeight) vars.push(`--md2pdf-lh: ${overrides.lineHeight};`);
-  const varCss = vars.length ? `<style>:root{${vars.join(' ')}}</style>` : '';
+  const fontCss = font ? `<style>:root{--md2pdf-font: ${font};}</style>` : '';
 
   return `<!DOCTYPE html>
 <html lang="${escapeHtml(lang)}">
@@ -65,14 +38,10 @@ export function buildHtml({
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>${escapeHtml(title)}</title>
 <style>${themeCss}</style>
-${varCss}
+${fontCss}
 </head>
-<body class="${escapeHtml(bodyClass)}">
-${coverHtml}
-${tocHtml}
-<main class="content">
+<body>
 ${bodyHtml}
-</main>
 </body>
 </html>
 `;

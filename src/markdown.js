@@ -4,6 +4,7 @@
  *  - markdown-it-task-lists: 任务列表
  *  - markdown-it-footnote: 脚注
  *  - highlight.js: 代码语法高亮(构建期完成,PDF 内无需网络)
+ * 不做任何页面级改造——内容一一对应渲染
  */
 import MarkdownIt from 'markdown-it';
 import anchor from 'markdown-it-anchor';
@@ -81,9 +82,9 @@ function renderFence(tokens, idx, options, env, self) {
 
 /**
  * 渲染 Markdown,返回 { html, headings }
- * headings: [{ level, text, id }] 仅收集 1~3 级标题,用于目录
+ * headings 仅用于提取文档标题(写入 PDF 元数据),不参与排版
  */
-export function renderMarkdown(mdText, options = {}) {
+export function renderMarkdown(mdText) {
   const md = new MarkdownIt({
     html: false,        // 忽略原始 HTML,防止注入
     linkify: true,      // 裸 URL 自动转链接
@@ -93,10 +94,7 @@ export function renderMarkdown(mdText, options = {}) {
   md.use(anchor, { slugify });
   md.use(taskLists, { enabled: true, label: true });
   md.use(footnote);
-
-  if (options.highlight !== false) {
-    md.renderer.rules.fence = renderFence;
-  }
+  md.renderer.rules.fence = renderFence;
 
   const headings = [];
   const defaultHeadingOpen = md.renderer.rules.heading_open
@@ -105,7 +103,7 @@ export function renderMarkdown(mdText, options = {}) {
   md.renderer.rules.heading_open = (tokens, idx, o, e, self) => {
     const token = tokens[idx];
     const level = Number(token.tag.slice(1));
-    if (level <= 3) {
+    if (level === 1) {
       headings.push({
         level,
         text: tokens[idx + 1].content,

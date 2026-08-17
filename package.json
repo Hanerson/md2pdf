@@ -20,8 +20,8 @@
   },
   "scripts": {
     "test": "node --test",
-    "example": "node bin/md2pdf.js examples/sample.md -o examples/sample.pdf --toc --cover",
-    "example:html": "node bin/md2pdf.js examples/sample.md -o examples/sample.html --format html"
+    "example": "node bin/md2pdf.js examples/sample.md",
+    "example:html": "node bin/md2pdf.js examples/sample.md --format html"
   },
   "keywords": [
     "markdown",

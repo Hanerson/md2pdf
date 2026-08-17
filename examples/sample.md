@@ -1,6 +1,6 @@
 # md2pdf 示例文档
 
-> 本文用于演示 md2pdf 的排版效果:中文排版、代码高亮、表格、目录、脚注、任务列表等。运行 `npm run example` 即可生成 `examples/sample.pdf`。
+> 本文用于演示 md2pdf 的排版效果:中文宋体、英文 Times New Roman、代码高亮、表格、脚注、任务列表等。运行 `npm run example` 即可生成 `examples/sample.pdf`。
 
 ## 关于本工具
 
@@ -14,19 +14,15 @@ md2pdf 是一条**干净的 Markdown → PDF 管线**:
 
 ### 特性一览
 
-- 中文排版优化:两端对齐、合适的行高与字号、中文字体栈
-- 代码语法高亮(30+ 常见语言,浅色 GitHub 风格)
-- 可点击目录(`--toc`)、封面页(`--cover`)、页码页眉页脚
+- 中文宋体、英文 Times New Roman,一一对应连续渲染
+- 无封面、无目录、无页眉页脚——内容从第一页直接开始
+- 代码语法高亮(30+ 常见语言,浅色配色)
+- 命令极简:`md2pdf doc.md` 直接生成 `doc.pdf`
 - 主题 CSS 完全可定制(`--style custom.css`)
-- 配置文件:`md2pdf.config.json`
 
 ## 中文排版演示
 
 中文排版讲究**字距均匀、行距舒展**。本工具默认行高 1.75,正文 11pt(五号),标题分级清晰:
-
-- 一级标题:22pt,带分隔线
-- 二级标题:16pt,带分隔线
-- 三级标题:13pt
 
 混合中英文段落同样自然,比如:Markdown 是轻量级标记语言,由 John Gruber 于 2004 年发布,设计目标是"易读易写的纯文本格式,并可转换为结构化的 HTML"。Chinese text flows naturally alongside English words and inline `code` snippets.
 
@@ -64,7 +60,7 @@ print(count_lines(Path("README.md")))
 ```bash
 # 终端命令示例
 $ npx playwright install chromium
-$ node bin/md2pdf.js 文档.md -o 文档.pdf --toc --cover
+$ md2pdf 文档.md
 ```
 
 ```rust
@@ -82,11 +78,11 @@ fn largest<T: PartialOrd + Copy>(list: &[T]) -> T {
 
 | 功能 | CLI 参数 | 说明 |
 | --- | --- | --- |
-| 目录 | `--toc` | 正文前生成可点击目录 |
-| 封面 | `--cover` | 大标题封面页,可配 `--author` |
-| 自定义主题 | `--style` | 传入你自己的 CSS 文件 |
+| 输出路径 | `-o` | 默认与输入同名 `.pdf` |
+| 自定义主题 | `-s` | 传入你自己的 CSS 文件 |
+| 自定义字体 | `-f` | 例如 `SimHei` 换成黑体 |
 | 页面尺寸 | `--page-size` | A4 / Letter / A5 / A3 |
-| 页边距 | `--margin` | 例如 `25 20 25 20`(上 右 下 左) |
+| 页边距 | `-m` | 例如 `25 20 25 20`(上 右 下 左) |
 
 | 页面尺寸 | 宽度 (mm) | 高度 (mm) |
 | --- | --- | --- |

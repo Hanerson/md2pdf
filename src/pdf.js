@@ -1,10 +1,8 @@
 /**
  * PDF 打印:Playwright Chromium 渲染
- * 页眉/页脚模板受 Chromium 限制——必须使用内联样式与固定类名
- * (pageNumber / totalPages / title / date)
+ * 无页眉、无页脚、无附加页——HTML 内容按文档流一一对应排布
  */
 import { chromium } from 'playwright';
-import { escapeHtml } from './util.js';
 
 /** 解析页边距:"18" 或 "上 右 下 左"(mm) */
 export function parseMargin(value) {
@@ -20,28 +18,9 @@ export function parseMargin(value) {
   return { top: `${top}mm`, right: `${right}mm`, bottom: `${bottom}mm`, left: `${left}mm` };
 }
 
-function headerTemplate(text, show) {
-  if (!show) return '<div></div>';
-  return `<div style="width:100%;margin:0;padding:0;display:flex;font-size:8px;color:#6e7781;border-bottom:0.5px solid #d0d7de;padding-bottom:4mm;"><span>${escapeHtml(text)}</span></div>`;
-}
-
-function footerTemplate(text, show) {
-  if (!show) return '<div></div>';
-  const inner = text == null
-    ? '第 <span class="pageNumber"></span> 页 / 共 <span class="totalPages"></span> 页'
-    : String(text)
-        .replaceAll('{page}', '<span class="pageNumber"></span>')
-        .replaceAll('{pages}', '<span class="totalPages"></span>');
-  return `<div style="width:100%;margin:0;padding:4mm 0 0;text-align:center;font-size:8px;color:#6e7781;">${inner}</div>`;
-}
-
 /** 渲染 HTML 为 PDF Buffer */
 export async function renderPdf(html, options = {}) {
   const margin = options.marginObj || parseMargin(options.margin ?? '18');
-
-  const showHeader = options.header !== false && options.header !== '';
-  const headerText = showHeader ? (options.header ?? options.title ?? '') : '';
-  const showFooter = options.footer !== false && options.footer !== '';
 
   let browser;
   try {
@@ -59,9 +38,7 @@ export async function renderPdf(html, options = {}) {
       format: options.pageSize || 'A4',
       margin,
       printBackground: true,
-      displayHeaderFooter: showHeader || showFooter,
-      headerTemplate: headerTemplate(headerText, showHeader),
-      footerTemplate: footerTemplate(options.footer, showFooter),
+      displayHeaderFooter: false,
     });
   } finally {
     await browser.close();

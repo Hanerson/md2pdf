@@ -1,21 +1,23 @@
 /* ============================================================
-   md2pdf 默认主题:干净 · 中文排版优化
-   - 中文正文使用系统黑体栈(Windows: 微软雅黑 / macOS: 苹方 / Linux: Noto)
+   md2pdf 默认主题:极简 · 中文宋体 + 英文 Times New Roman
+   - 中文字体:宋体(SimSun / Songti SC / Noto Serif CJK SC)
+   - 英文字体:Times New Roman
    - 两端对齐 + inter-ideograph 标点挤压
-   - 通过 CSS 变量覆盖: --md2pdf-font / --md2pdf-lh
+   - 无封面、无目录、无页眉页脚,内容一一对应连续渲染
+   可通过 CSS 变量覆盖字体: --md2pdf-font
    ============================================================ */
 
 :root {
-  --text: #1f2328;
-  --muted: #6e7781;
-  --accent: #0969da;
-  --border: #d0d7de;
-  --bg-subtle: #f6f8fa;
+  --text: #1a1a1a;
+  --muted: #555555;
+  --accent: #0f5bb5;
+  --border: #c8c8c8;
+  --bg-subtle: #f5f5f5;
 
-  --font-body: "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei UI",
-    "Microsoft YaHei", "Noto Sans CJK SC", "Source Han Sans SC", sans-serif;
-  --font-code: "Cascadia Code", "JetBrains Mono", Consolas, "Courier New",
-    "Microsoft YaHei", monospace;
+  /* 拉丁字符先用 Times New Roman,中文字符回退到宋体 */
+  --font-body: "Times New Roman", SimSun, "Songti SC", "STSong",
+    "Source Han Serif SC", "Noto Serif CJK SC", serif;
+  --font-code: Consolas, "Courier New", SimSun, monospace;
 }
 
 * { box-sizing: border-box; }
@@ -30,7 +32,7 @@ body {
   padding: 0;
   font-family: var(--md2pdf-font, var(--font-body));
   font-size: 11pt;
-  line-height: var(--md2pdf-lh, 1.75);
+  line-height: 1.75;
   color: var(--text);
   text-align: justify;
   text-justify: inter-ideograph;
@@ -40,24 +42,20 @@ body {
 /* ---------- 标题 ---------- */
 h1, h2, h3, h4, h5, h6 {
   line-height: 1.4;
-  margin: 1.6em 0 0.6em;
+  margin: 1.5em 0 0.6em;
   text-align: left;
-  letter-spacing: 0.02em;
+  font-weight: 600;
   break-after: avoid;
   page-break-after: avoid;
 }
 h1 {
-  font-size: 22pt;
+  font-size: 20pt;
   margin-top: 0;
-  border-bottom: 2px solid var(--border);
+  border-bottom: 1px solid var(--text);
   padding-bottom: 0.3em;
 }
-h2 {
-  font-size: 16pt;
-  border-bottom: 1px solid var(--border);
-  padding-bottom: 0.25em;
-}
-h3 { font-size: 13pt; }
+h2 { font-size: 15pt; }
+h3 { font-size: 12.5pt; }
 h4 { font-size: 11.5pt; }
 h5, h6 { font-size: 11pt; color: var(--muted); }
 
@@ -78,14 +76,14 @@ code {
   font-size: 0.88em;
   background: var(--bg-subtle);
   border: 1px solid var(--border);
-  border-radius: 4px;
+  border-radius: 3px;
   padding: 0.1em 0.35em;
 }
 
 pre.code-block {
   background: var(--bg-subtle);
   border: 1px solid var(--border);
-  border-radius: 6px;
+  border-radius: 4px;
   padding: 12px 14px;
   margin: 0.9em 0;
   font-size: 9.5pt;
@@ -103,17 +101,17 @@ pre.code-block code {
   font-size: inherit;
 }
 
-/* 代码高亮配色(GitHub 浅色风) */
+/* 代码高亮配色(浅色) */
 .hljs-comment, .hljs-quote { color: #6a737d; font-style: italic; }
-.hljs-keyword, .hljs-selector-tag, .hljs-subst { color: #cf222e; }
+.hljs-keyword, .hljs-selector-tag, .hljs-subst { color: #a31621; }
 .hljs-string, .hljs-regexp, .hljs-addition { color: #0a3069; }
 .hljs-number, .hljs-literal, .hljs-variable, .hljs-template-variable { color: #0550ae; }
-.hljs-title, .hljs-function .hljs-title, .hljs-section { color: #8250df; }
+.hljs-title, .hljs-function .hljs-title, .hljs-section { color: #6f42c1; }
 .hljs-type, .hljs-class .hljs-title, .hljs-built_in { color: #116329; }
 .hljs-attr, .hljs-attribute, .hljs-name, .hljs-selector-attr { color: #953800; }
 .hljs-tag, .hljs-bullet, .hljs-symbol, .hljs-meta { color: #0550ae; }
 .hljs-params, .hljs-operator, .hljs-punctuation { color: #57606a; }
-.hljs-doctag { color: #cf222e; }
+.hljs-doctag { color: #a31621; }
 .hljs-emphasis { font-style: italic; }
 .hljs-strong { font-weight: bold; }
 .hljs-deletion { color: #82071e; }
@@ -132,9 +130,9 @@ th, td {
   padding: 6px 10px;
   text-align: left;
 }
-th { background: #f0f3f6; font-weight: 600; }
+th { background: #ececec; font-weight: 600; }
 tbody tr { break-inside: avoid; page-break-inside: avoid; }
-tbody tr:nth-child(even) { background: #fafbfc; }
+tbody tr:nth-child(even) { background: #fafafa; }
 
 /* ---------- 引用 / 列表 / 分割线 / 图片 ---------- */
 blockquote {
@@ -172,60 +170,3 @@ sup { font-size: 0.75em; }
   color: var(--muted);
 }
 .footnotes hr { display: none; }
-
-/* ---------- 目录页 ---------- */
-.toc-page {
-  break-after: page;
-  page-break-after: always;
-}
-.toc-title {
-  font-size: 18pt;
-  border-bottom: 2px solid var(--text);
-  padding-bottom: 0.3em;
-}
-.toc-list {
-  list-style: none;
-  padding-left: 0;
-  margin: 1em 0;
-}
-.toc-item { margin: 0.35em 0; text-align: left; }
-.toc-item a { color: var(--text); }
-.toc-item a:hover { color: var(--accent); }
-.toc-level-1 { font-weight: 600; font-size: 12pt; margin-top: 0.8em; }
-.toc-level-2 { padding-left: 1.5em; }
-.toc-level-3 { padding-left: 3em; color: var(--muted); }
-
-/* ---------- 封面页 ---------- */
-.cover-page {
-  height: 100vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  break-after: page;
-  page-break-after: always;
-  text-align: center;
-}
-.cover-title {
-  font-size: 34pt;
-  font-weight: 700;
-  letter-spacing: 0.08em;
-  border: none;
-  margin: 0;
-  padding: 0;
-}
-.cover-meta {
-  margin-top: 3em;
-  font-size: 11pt;
-  color: var(--muted);
-}
-
-/* ---------- 可选: 一级标题另起一页(--break-h1) ---------- */
-body.break-h1 h1 {
-  break-before: page;
-  page-break-before: always;
-}
-body.break-h1 h1:first-of-type {
-  break-before: auto;
-  page-break-before: auto;
-}
